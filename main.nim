@@ -1,4 +1,6 @@
 import strformat
+import colors
+#import vec3
 
 const IMG_WIDTH = 256
 const IMG_HEIGHT = 256
@@ -13,15 +15,7 @@ proc main =
   for j in countdown(IMG_HEIGHT-1,0):
     echo fmt"Scanlines remaining {j}...{'\n'}"
     for i in 0..(IMG_WIDTH-1):
-      let r = i / (IMG_WIDTH-1)
-      let g = j / (IMG_HEIGHT-1)
-      let b = 0.25
-
-      let ir = int(COLOR_DEPTH*r)
-      let ig = int(COLOR_DEPTH*g)
-      let ib = int(COLOR_DEPTH*b)
-
-      f.write(fmt"{ir} {ig} {ib}{'\n'}")
+      f.write(fmt"{color(i/(IMG_WIDTH-1),j/(IMG_HEIGHT-1),0.25) }{'\n'}")
 
 
 main()
