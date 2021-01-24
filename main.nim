@@ -11,8 +11,8 @@ proc main =
   f.write("P3\n")
   f.write(fmt"{IMG_WIDTH} {IMG_HEIGHT}{'\n'}{COLOR_DEPTH}{'\n'}")
   for j in countdown(IMG_HEIGHT-1,0):
+    echo fmt"Scanlines remaining {j}...{'\n'}"
     for i in 0..(IMG_WIDTH-1):
-      echo fmt"Scanlines remaining {j}...{'\n'}"
       let r = i / (IMG_WIDTH-1)
       let g = j / (IMG_HEIGHT-1)
       let b = 0.25
