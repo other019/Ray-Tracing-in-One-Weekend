@@ -3,19 +3,26 @@ import colors
 import vec3s
 import rays
 import points
-proc hit_sphere(center: Point, radius: float, r: Ray): bool =
+import math
+proc hit_sphere(center: Point, radius: float, r: Ray): float =
   let oc: Vec3 = r.origin - center
   let a= r.dir *. r.dir
   let b= 2.0 * oc *. r.dir
   let c= oc *. oc - radius * radius
   let discriminant= b*b - 4*a*c
-  return discriminant>0
+  if discriminant < 0:
+    return -1.0
+  else:
+    return (-b - math.sqrt(discriminant))/(2.0*a)
+  
 
 proc ray_color(r: Ray): Color = 
-  if(hit_sphere(point(0.0,0.0,-1.0),0.5,r)):
-    return color(1.0,0.0,0.0)
+  var t = hit_sphere(point(0.0,0.0,-1.0),0.5,r)
+  if t > 0.0:
+    let N:Vec3 = !(r.at(t) - point(0,0,-1))
+    return 0.5*color(N.x+1,N.y+1,N.z+1)
   let unit_direction: Vec3 = !r.dir
-  let t = 0.5*(unit_direction.y + 1.0)
+  t = 0.5*(unit_direction.y + 1.0)
   return (1.0 - t) * color(1.0,1.0, 1.0) + t * color(0.5,0.7,1.0)
 
 const ASPECT_RATIO = 16.0 / 9.0
