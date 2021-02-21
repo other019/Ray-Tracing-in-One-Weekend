@@ -36,4 +36,7 @@ proc `||`*(a: Vec3): float = #length
   return math.sqrt(a.x*a.x + a.y*a.y + a.z*a.z)
 
 proc `!`*(a: Vec3): Vec3 = # unit
-  return a/(||a)
+  return a/(||a) 
+
+proc length_squared*(a: Vec3): float =
+  return ||a * ||a

@@ -4,16 +4,17 @@ import vec3s
 import rays
 import points
 import math
+import image
 proc hit_sphere(center: Point, radius: float, r: Ray): float =
   let oc: Vec3 = r.origin - center
-  let a= r.dir *. r.dir
-  let b= 2.0 * oc *. r.dir
-  let c= oc *. oc - radius * radius
-  let discriminant= b*b - 4*a*c
+  let a = r.dir.length_squared()
+  let half_b = oc *. r.dir
+  let c = oc.length_squared() - radius * radius
+  let discriminant = half_b * half_b - a * c
   if discriminant < 0:
     return -1.0
   else:
-    return (-b - math.sqrt(discriminant))/(2.0*a)
+    return (-half_b - math.sqrt(discriminant))/(a)
   
 
 proc ray_color(r: Ray): Color = 
@@ -44,16 +45,20 @@ proc main =
   let f = open("image.ppm",fmWrite)
   defer: f.close()
 
+  var pixels = newSeq[seq[Color]](IMG_HEIGHT)
   f.write("P3\n")
   f.write(fmt"{IMG_WIDTH} {IMG_HEIGHT}{'\n'}{COLOR_DEPTH}{'\n'}")
   for j in countdown(IMG_HEIGHT-1,0):
+    pixels[j].newSeq(IMG_WIDTH)
     echo fmt"Scanlines remaining {j}...{'\n'}"
     for i in 0..(IMG_WIDTH-1):
       let u = float(i) / (IMG_WIDTH - 1)
       let v = float(j) / (IMG_HEIGHT - 1)
       let r: Ray = ray(origin, lower_left_corner + (u*horizontal) + (v*vertical) - origin)
       let c: Color = ray_color(r)
+      pixels[j][i] = c
       f.write(fmt"{c}{'\n'}")
 
+  writeImage("image.png",pixels)
 
 main()
